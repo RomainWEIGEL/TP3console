@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TP3console.Models.EntityFramework
 {
@@ -12,6 +13,11 @@ namespace TP3console.Models.EntityFramework
         public Categorie()
         {
             Films = new HashSet<Film>();
+        }
+        private ILazyLoader _lazyLoader;
+        public Categorie(ILazyLoader lazyLoader)
+        {
+            _lazyLoader = lazyLoader;
         }
 
         [Key]
@@ -23,7 +29,16 @@ namespace TP3console.Models.EntityFramework
         [Column("description")]
         public string? Description { get; set; }
 
+        private ICollection<Film> films; //Doit être écrit de la même façon que la property Films 
+
         [InverseProperty("CategorieNavigation")]
-        public virtual ICollection<Film> Films { get; set; }
+        public virtual ICollection<Film> Films
+        {
+            get
+            {
+                return _lazyLoader.Load(this, ref films);
+            }
+            set { films = value; }
+        }
     }
 }

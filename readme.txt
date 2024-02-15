@@ -1,0 +1,1 @@
+Scaffold-DbContext "Server=localhost;port=5432;Database=FilmsDB; uid=postgres; password=postgres;"-Provider Npgsql.EntityFrameworkCore.PostgreSQL -OutputDir Models/EntityFramework
